@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "http-proxy": "^1.18.1",
+    "node-fetch": "^2.7.0"
+  }
+}
