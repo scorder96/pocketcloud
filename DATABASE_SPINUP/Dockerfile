@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-ARG PB_VERSION=0.22.24
+ARG PB_VERSION=0.24.0
 
 RUN apk add --no-cache \
     unzip \
@@ -18,5 +18,11 @@ RUN unzip /tmp/pb.zip -d /pb/
 
 EXPOSE 8080
 
+ENV EMAIL=email@email.com
+ENV PASS=password
+# RUN echo $PASS
+
+# create Superuser account
 # start PocketBase
-CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080"]
+# CMD [ "pb/pocketbase", "superuser", "upsert", ${EMAIL}, ${PASS}, "&&" , "/pb/pocketbase", "serve", "--http=0.0.0.0:8080"]
+CMD ["sh", "-c", "/pb/pocketbase superuser upsert $EMAIL $PASS && /pb/pocketbase serve --http=0.0.0.0:8080"]

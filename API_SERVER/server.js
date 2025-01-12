@@ -13,15 +13,19 @@ const app = express();
 import cors from "cors";
 const PORT = 9000;
 
+app.use(express.json());
 app.use(cors());
-const pb = new PocketBase(process.env.SUPER_DATABASE_URL);
-pb.admins.authWithPassword(process.env.ADMIN_USER,process.env.ADMIN_PWD)
 
-app.get("/deploy/:id", (req, res) => {
+const pb = new PocketBase("https://pbdb.pocketcloud.xyz");
+pb.admins.authWithPassword("scorder96@gmail.com","7hEW2xCnaHqwDKQ")
+
+// `docker run -d --name ${req.params.id} --network mynet database-spinup && docker exec ${req.params.id} pb/pocketbase superuser upsert ${req.body.email} ${req.body.pass} && docker exec ${req.params.id} pb/pocketbase serve --http=0.0.0.0:8080`
+
+app.post("/deploy/:id", (req, res) => {
   pb.collection('instances').getFirstListItem('instance="'+req.params.id+'"')
     .then(() => {
       const deploy = exec(
-        "docker run -d --name " + req.params.id + " --network mynet database-spinup"
+        `docker run -d --name ${req.params.id} --network mynet -e EMAIL=${req.body.email} -e PASS=${req.body.pass} database-spinup`
       );
       deploy.stdout.on("data", (data) => {
         console.log(data.toString());
